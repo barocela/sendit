@@ -3,9 +3,9 @@
 ini_set('display_errors', 1);
 
 define("USER", "courier.sendit");
-define("WSDL", "server.xml");     # The WSDL corresponding to WSAA
-define("CERT", "ready.crt.pem");       # The X.509 obtained from Seg. Inf.
-define("PRIVATEKEY", "ready.key.pem"); # The private key correspoding to CERT
+define("WSDL", "wsdl/server.xml");     # The WSDL corresponding to WSAA
+define("CERT", "certificate/ready.crt.pem");       # The X.509 obtained from Seg. Inf.
+define("PRIVATEKEY", "certificate/ready.key.pem"); # The private key correspoding to CERT
 define("PASSPHRASE", "Hackeruno2@"); # The passphrase (if any) to sign
 # SERVICE: The WS service name you are asking a TA for
 #define ("SERVICE", "wdepmovimientos");
@@ -13,7 +13,7 @@ define("PASSPHRASE", "Hackeruno2@"); # The passphrase (if any) to sign
 define("SERVICE", "serviciotere");
 define("WSAAURL", "https://secure.aduana.gov.py/test/wsaa/server?wsdl/LoginCms");
 # WSAAURL: the URL to access WSAA, check for http or https and wsaa or wsaahomo
-define("TEREWSDL", "terews.xml");
+define("TEREWSDL", "wsdl/terews.xml");
 define("WSTEREURL", "https://secure.aduana.gov.py/test/tere/serviciotere?wsdl");
 # DESTINATIONDN must contain the WSAA dn, it must be exactly as follows, you
 # should only change the "cn" portion, it should be "wsaahomo" for the testing
@@ -46,7 +46,7 @@ function CreateTRA() {
     $TRA->header->addChild('generationTime', date('c', date('U') - 600));
     $TRA->header->addChild('expirationTime', date('c', date('U') + 600));
     $TRA->addChild('service', SERVICE);
-    $TRA->asXML('TRA.xml');
+    $TRA->asXML('generate/TRA.xml');
 }
 
 #==============================================================================
@@ -55,12 +55,12 @@ function CreateTRA() {
 # MIME heading leaving the final CMS required by WSAA.
 
 function SignTRA() {
-    $STATUS = openssl_pkcs7_sign("TRA.xml", "TRA.tmp", "file://" . CERT, array("file://" . PRIVATEKEY, PASSPHRASE), array(), !PKCS7_DETACHED
+    $STATUS = openssl_pkcs7_sign("generate/TRA.xml", "generate/TRA.tmp", "file://" . CERT, array("file://" . PRIVATEKEY, PASSPHRASE), array(), !PKCS7_DETACHED
     );
     if (!$STATUS) {
         exit("ERROR generating PKCS#7 signature\n");
     }
-    $inf = fopen("TRA.tmp", "r");
+    $inf = fopen("generate/TRA.tmp", "r");
     $i = 0;
     $CMS = "";
     while (!feof($inf)) {
@@ -72,8 +72,8 @@ function SignTRA() {
 
 
     fclose($inf);
-    unlink("TRA.xml");
-    unlink("TRA.tmp");
+    unlink("generate/TRA.xml");
+    unlink("generate/TRA.tmp");
     return $CMS;
 }
 
@@ -107,8 +107,8 @@ function autenticate() {
     $TA = CallWSAA($CMS);
     $xml = new SimpleXMLElement($TA);
 
-    if (!file_put_contents("TA.xml", $TA)) {
-        exit("Error writing TA.xml\n");
+    if (!file_put_contents("generate/TA.xml", $TA)) {
+        exit("Error writing generate/TA.xml\n");
     }
 
     return $TA;
@@ -197,26 +197,18 @@ EOD;
 
 include("csv2xml.php");
 
-//Create the instance of the class
-$csv2xml = new csv2xml(); 
+function convert($filename){
+    //Create the instance of the class
+    $csv2xml = new csv2xml();
+    //Set the root node for the XML
+    $csv2xml->setRootNode("guiaMadre");
+    // Set the recurring node for the XML
+    $csv2xml->setRecurringNode("guiaHija"); 
+    $csv2xml->setCSVFile($filename.".csv"); 
+    //Convert the file
+    $csv2xml->convertCSV2XML();     
+}
 
-//Set the root node for the XML
-//$csv2xml->setRootNode("guiaMadre"); 
+addGguia();
 
-// Set the recurring node for the XML
-$csv2xml->setRecurringNode("guiaHija"); 
-
-//Provide the CSV filemname
-$filename = "data/guiaMadre";
-$csv2xml->setCSVFile($filename.".csv"); 
-
-//Convert the file
-$csv2xml->convertCSV2XML(); 
-
-$result = strtolower($filename);
-$show = file_get_contents($result.".xml");
-echo "<pre>";
-echo $show;
-die;
-//addGguia();
 ?>
