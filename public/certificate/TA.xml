@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loginTicketResponse version="1.0">
+	<header>
+		<source>C=py, O=dna, OU=sofia, CN=wsaatest</source>
+		<destination>C=PY,O=senditcourrier,OU=sofia,CN=courier.sendit</destination>
+		<uniqueId>1404249719</uniqueId>
+		<generationTime>2014-07-01T17:21:59.067-04:00</generationTime>
+		<expirationTime>2014-07-01T18:22:09.067-04:00</expirationTime>
+	</header>
+	<credentials>
+		<token>CjxhdXRoPgoJPGlkIHVuaXF1ZV9pZD0iMTQwNDI0OTcxNyIgc3JjPSJDPXB5LCBPPWRuYSwgT1U9c29maWEsIENOPXdzYWF0ZXN0IiBnZW5fdGltZT0iMjAxNC0wNy0wMVQyMzoxMTo1NyswMjowMCIgZXhwX3RpbWU9IjIwMTQtMDctMDFUMjM6MzE6NTcrMDI6MDAiLz4KCTxvcGVyYXRpb24gdmFsdWU9ImdyYW50ZWQiIHR5cGU9ImxvZ2luIj4KCQk8bG9naW4gdWlkPSJDPVBZLE89c2VuZGl0Y291cnJpZXIsT1U9c29maWEsQ049Y291cmllci5zZW5kaXQiIHNlcnZpY2U9InNlcnZpY2lvdGVyZSIgYXV0aG1ldGhvZD0iY21zIj4KCQk8L2xvZ2luPgoJPC9vcGVyYXRpb24+CjwvYXV0aD4K</token>
+		<sign>EYxHRY2ZXqTfkFpf0oU2rtSrCJKu5PDkPyMhSey5aL+lafZvRyN4S5xWJ7T05zEbZYj93ysuRNXvnW+GY75hNX3c2lQUx+h5KEd7BrxrFTLGdsgSviT9tZ2mQnjruOTC1Yd+xoglWUtQY5qwx9mfqF3aQsGp0YmZ9WR9GiSLCT8=</sign>
+	</credentials>
+</loginTicketResponse>

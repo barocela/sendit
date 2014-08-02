@@ -1,0 +1,32 @@
+<definitions name='WsaaServerBeanService' targetNamespace='http://ejb.server.wsaa.dna.gov.py/' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://ejb.server.wsaa.dna.gov.py/' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+ <types></types>
+ <message name='WsaaServerBean_loginCmsResponse'>
+  <part name='return' type='xsd:string'></part>
+ </message>
+ <message name='WsaaServerBean_loginCms'>
+  <part name='arg0' type='xsd:string'></part>
+ </message>
+ <portType name='WsaaServerBean'>
+  <operation name='loginCms' parameterOrder='arg0'>
+   <input message='tns:WsaaServerBean_loginCms'></input>
+   <output message='tns:WsaaServerBean_loginCmsResponse'></output>
+  </operation>
+ </portType>
+ <binding name='WsaaServerBeanBinding' type='tns:WsaaServerBean'>
+  <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='loginCms'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://ejb.server.wsaa.dna.gov.py/' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://ejb.server.wsaa.dna.gov.py/' use='literal'/>
+   </output>
+  </operation>
+ </binding>
+ <service name='WsaaServerBeanService'>
+  <port binding='tns:WsaaServerBeanBinding' name='WsaaServerBeanPort'>
+   <soap:address location='http://192.4.1.39:8180/wsaaserver/Server'/>
+  </port>
+ </service>
+</definitions>
