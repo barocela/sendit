@@ -1,18 +1,10 @@
 <?php
 
-# Author: Gerardo Fisanotti - DvSHyS/DiOPIN/AFIP - 13-apr-07
-# Function: Get an authorization ticket (TA) from AFIP WSAA
-# Input:
-#        WSDL, CERT, PRIVATEKEY, PASSPHRASE, SERVICE, WSAAURL, DESTINATIONDN
-#        Check below for its definitions
-# Output:
-#        TA.xml: the authorization ticket as granted by WSAA.
-#        TOKEN.txt: The Token field, parsed from TA if you are too lazy to parse
-#        SIGN.txt: The Sign field, parsed from TA for the lazy ones.
-#==============================================================================
-$user = "courier.sendit";
+
+ini_set('display_errors',1);
+
+define("USER", "courier.sendit");
 define("WSDL", "server.xml");     # The WSDL corresponding to WSAA
-define("TEREWSDL", "terews.xml");
 define("CERT", "ready.crt.pem");       # The X.509 obtained from Seg. Inf.
 define("PRIVATEKEY", "ready.key.pem"); # The private key correspoding to CERT
 define("PASSPHRASE", "Hackeruno2@"); # The passphrase (if any) to sign
@@ -20,12 +12,16 @@ define("PASSPHRASE", "Hackeruno2@"); # The passphrase (if any) to sign
 #define ("SERVICE", "wdepmovimientos");
 #define ("SERVICE", "wsfe");
 define("SERVICE", "serviciotere");
-# WSAAURL: the URL to access WSAA, check for http or https and wsaa or wsaahomo
 define("WSAAURL", "https://secure.aduana.gov.py/test/wsaa/server?wsdl/LoginCms");
+# WSAAURL: the URL to access WSAA, check for http or https and wsaa or wsaahomo
+define("TEREWSDL", "terews.xml");
+define("WSTEREURL", "https://secure.aduana.gov.py/test/tere/serviciotere?wsdl");
 # DESTINATIONDN must contain the WSAA dn, it must be exactly as follows, you
 # should only change the "cn" portion, it should be "wsaahomo" for the testing
 # WSAA or "wsaa" for the production WSAA.
 define("DESTINATIONDN", "C=py, O=dna, OU=sofia, CN=wsaatest");
+define("PROXY", true);
+//define("PROXY", false); //usar esta rey
 
 
 # You shouldn't have to change anything below this line!!!
@@ -86,15 +82,7 @@ function SignTRA() {
 #==============================================================================
 
 function CallWSAA($CMS) {
-    $client = new SoapClient(WSDL, array('soap_version' => SOAP_1_2,
-        'location' => WSAAURL,
-        'trace' => 1,
-        'exceptions' => 0, # To disable exceptions
-        'proxy_host' => "10.104.0.172",
-        'proxy_port' => "1111"
-    ));
-
-
+    $client = createClient(WSDL, WSAAURL);
     $results = $client->loginCms($CMS);
     if (is_soap_fault($results)) {
         exit("SOAP Fault: " . $results->faultcode . "\n" . $results->faultstring . "\n");
@@ -103,39 +91,49 @@ function CallWSAA($CMS) {
     return $results;
 }
 
-#==============================================================================
-if (!file_exists(CERT)) {
-    exit("Failed to open " . CERT . "\n");
+function autenticate(){
+    
+    #==============================================================================
+    if (!file_exists(CERT)) {
+        exit("Failed to open " . CERT . "\n");
+    }
+    if (!file_exists(PRIVATEKEY)) {
+        exit("Failed to open " . PRIVATEKEY . "\n");
+    }
+    if (!file_exists(WSDL)) {
+        exit("Failed to open " . WSDL . "\n");
+    }
+    
+    CreateTRA();
+    $CMS = SignTRA();
+    $TA = CallWSAA($CMS);
+    $xml = new SimpleXMLElement($TA);
+
+    if (!file_put_contents("TA.xml", $TA)) {
+        exit("Error writing TA.xml\n");
+    }
+    
+    return $TA;
 }
-if (!file_exists(PRIVATEKEY)) {
-    exit("Failed to open " . PRIVATEKEY . "\n");
+
+function createClient($wsdl, $url) {
+
+    $options = array();
+    $options['location'] = $url;
+    $options['trace'] = 1;
+    $options['exceptions'] = 0;
+    $options['soap_version'] = SOAP_1_2;
+    if (PROXY) {
+        $options['proxy_host'] = "10.104.0.172";
+        $options['proxy_port'] = "1111";
+    }
+
+    $client = new SoapClient($wsdl, $options);
+    return $client;
 }
-if (!file_exists(WSDL)) {
-    exit("Failed to open " . WSDL . "\n");
-}
-CreateTRA();
-$CMS = SignTRA();
-$TA = CallWSAA($CMS);
-$xml = new SimpleXMLElement($TA);
 
-if (!file_put_contents("TA.xml", $TA)) {
-    exit("Error writing TA.xml\n");
-}
-
-//Conectandome a un WS
-
-$client2 = new SoapClient(TEREWSDL, array('soap_version' => SOAP_1_2,
-    'location' => "https://secure.aduana.gov.py/test/tere/serviciotere",
-    'trace' => 1,
-    'exceptions' => 0, # To disable exceptions
-    'proxy_host' => "10.104.0.172",
-    'proxy_port' => "1111"
-));
-
-
-$guia = <<<EOD
-<terews>
-<guiasMadre>
+function addGguia() {
+    $guia = <<<EOD
 <guiaMadre>
 <idLoteRemesa>14XXX0000000011P</idLoteRemesa>
 <codAduana>704</codAduana>
@@ -182,18 +180,22 @@ BAG</naturalezaMercaderia>
 </guiaHija>
 </guiasHija>
 </guiaMadre>
-</guiasMadre>
-</terews>
 EOD;
 
 //$results = $client2->__getFunctions();
-$results = $client2->agregarGuia($TA, $guia);
+    $TA = autenticate();
+    $client = createClient(TEREWSDL, WSTEREURL);
+    $results = $client->agregarGuia($guia, $TA);
 
-if (is_soap_fault($results)) {
-    exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
+    if (is_soap_fault($results)) {
+        exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
+    }
+
+    echo "<pre>";
+    var_dump($results);
+    die;
 }
 
-echo "<pre>";
-print_r($results);
-die;
+addGguia();
+
 ?>

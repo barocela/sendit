@@ -1,0 +1,181 @@
+<definitions name='servicioreferencia' targetNamespace='http://aduana.gov.py/webservices' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://aduana.gov.py/webservices' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+ <types>
+  <xs:schema targetNamespace='http://aduana.gov.py/webservices' version='1.0' xmlns:tns='http://aduana.gov.py/webservices' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+   <xs:element name='TerewsException' type='tns:TerewsException'/>
+   <xs:element name='getAduanas' type='tns:getAduanas'/>
+   <xs:element name='getAduanasResponse' type='tns:getAduanasResponse'/>
+   <xs:element name='getCiaAerea' type='tns:getCiaAerea'/>
+   <xs:element name='getCiaAereaResponse' type='tns:getCiaAereaResponse'/>
+   <xs:element name='getMoneda' type='tns:getMoneda'/>
+   <xs:element name='getMonedaResponse' type='tns:getMonedaResponse'/>
+   <xs:element name='getPaises' type='tns:getPaises'/>
+   <xs:element name='getPaisesResponse' type='tns:getPaisesResponse'/>
+   <xs:complexType name='getMoneda'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='autenticacion'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codAduana' type='xs:string'/>
+     <xs:element minOccurs='0' name='firmaWSAA' type='xs:string'/>
+     <xs:element minOccurs='0' name='idUsuario' type='xs:string'/>
+     <xs:element minOccurs='0' name='ticketWSAA' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getMonedaResponse'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='tns:field'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='field'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='code' type='xs:string'/>
+     <xs:element minOccurs='0' name='description' type='xs:string'/>
+     <xs:element minOccurs='0' name='linkCode' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='TerewsException'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='key' type='xs:string'/>
+     <xs:element minOccurs='0' name='message' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getAduanas'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getAduanasResponse'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='tns:field'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getPaises'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getPaisesResponse'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='tns:field'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getCiaAerea'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getCiaAereaResponse'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='tns:field'/>
+    </xs:sequence>
+   </xs:complexType>
+  </xs:schema>
+ </types>
+ <message name='servicioreferenciaSoap_getAduanasResponse'>
+  <part element='tns:getAduanasResponse' name='getAduanasResponse'></part>
+ </message>
+ <message name='servicioreferenciaSoap_getMonedaResponse'>
+  <part element='tns:getMonedaResponse' name='getMonedaResponse'></part>
+ </message>
+ <message name='servicioreferenciaSoap_getAduanas'>
+  <part element='tns:getAduanas' name='getAduanas'></part>
+ </message>
+ <message name='servicioreferenciaSoap_getPaises'>
+  <part element='tns:getPaises' name='getPaises'></part>
+ </message>
+ <message name='servicioreferenciaSoap_getCiaAerea'>
+  <part element='tns:getCiaAerea' name='getCiaAerea'></part>
+ </message>
+ <message name='servicioreferenciaSoap_getMoneda'>
+  <part element='tns:getMoneda' name='getMoneda'></part>
+ </message>
+ <message name='TerewsException'>
+  <part element='tns:TerewsException' name='TerewsException'></part>
+ </message>
+ <message name='servicioreferenciaSoap_getPaisesResponse'>
+  <part element='tns:getPaisesResponse' name='getPaisesResponse'></part>
+ </message>
+ <message name='servicioreferenciaSoap_getCiaAereaResponse'>
+  <part element='tns:getCiaAereaResponse' name='getCiaAereaResponse'></part>
+ </message>
+ <portType name='servicioreferenciaSoap'>
+  <operation name='getAduanas' parameterOrder='getAduanas'>
+   <input message='tns:servicioreferenciaSoap_getAduanas'></input>
+   <output message='tns:servicioreferenciaSoap_getAduanasResponse'></output>
+   <fault message='tns:TerewsException' name='TerewsException'></fault>
+  </operation>
+  <operation name='getCiaAerea' parameterOrder='getCiaAerea'>
+   <input message='tns:servicioreferenciaSoap_getCiaAerea'></input>
+   <output message='tns:servicioreferenciaSoap_getCiaAereaResponse'></output>
+   <fault message='tns:TerewsException' name='TerewsException'></fault>
+  </operation>
+  <operation name='getMoneda' parameterOrder='getMoneda'>
+   <input message='tns:servicioreferenciaSoap_getMoneda'></input>
+   <output message='tns:servicioreferenciaSoap_getMonedaResponse'></output>
+   <fault message='tns:TerewsException' name='TerewsException'></fault>
+  </operation>
+  <operation name='getPaises' parameterOrder='getPaises'>
+   <input message='tns:servicioreferenciaSoap_getPaises'></input>
+   <output message='tns:servicioreferenciaSoap_getPaisesResponse'></output>
+   <fault message='tns:TerewsException' name='TerewsException'></fault>
+  </operation>
+ </portType>
+ <binding name='servicioreferenciaSoapBinding' type='tns:servicioreferenciaSoap'>
+  <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='getAduanas'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+   <fault name='TerewsException'>
+    <soap:fault name='TerewsException' use='literal'/>
+   </fault>
+  </operation>
+  <operation name='getCiaAerea'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+   <fault name='TerewsException'>
+    <soap:fault name='TerewsException' use='literal'/>
+   </fault>
+  </operation>
+  <operation name='getMoneda'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+   <fault name='TerewsException'>
+    <soap:fault name='TerewsException' use='literal'/>
+   </fault>
+  </operation>
+  <operation name='getPaises'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+   <fault name='TerewsException'>
+    <soap:fault name='TerewsException' use='literal'/>
+   </fault>
+  </operation>
+ </binding>
+ <service name='servicioreferencia'>
+  <port binding='tns:servicioreferenciaSoapBinding' name='servicioreferenciaSoap'>
+   <soap:address location='http://192.4.1.39:8180/tere/servicioreferencia'/>
+  </port>
+ </service>
+</definitions>
