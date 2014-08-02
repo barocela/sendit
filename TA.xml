@@ -3,12 +3,12 @@
 	<header>
 		<source>C=py, O=dna, OU=sofia, CN=wsaatest</source>
 		<destination>C=PY,O=senditcourrier,OU=sofia,CN=courier.sendit</destination>
-		<uniqueId>1406991387</uniqueId>
-		<generationTime>2014-08-02T10:56:27.468-04:00</generationTime>
-		<expirationTime>2014-08-02T22:56:27.468-04:00</expirationTime>
+		<uniqueId>1406992122</uniqueId>
+		<generationTime>2014-08-02T11:08:42.162-04:00</generationTime>
+		<expirationTime>2014-08-02T23:08:42.162-04:00</expirationTime>
 	</header>
 	<credentials>
-		<token>CjxhdXRoPgoJPGlkIHVuaXF1ZV9pZD0iMTQwNjk5MTMwNSIgc3JjPSJDPXB5LCBPPWRuYSwgT1U9c29maWEsIENOPXdzYWF0ZXN0IiBnZW5fdGltZT0iMjAxNC0wOC0wMlQxMDo0NTowNS0wNDowMCIgZXhwX3RpbWU9IjIwMTQtMDgtMDJUMTE6MDU6MDUtMDQ6MDAiLz4KCTxvcGVyYXRpb24gdmFsdWU9ImdyYW50ZWQiIHR5cGU9ImxvZ2luIj4KCQk8bG9naW4gdWlkPSJDPVBZLE89c2VuZGl0Y291cnJpZXIsT1U9c29maWEsQ049Y291cmllci5zZW5kaXQiIHNlcnZpY2U9InNlcnZpY2lvdGVyZSIgYXV0aG1ldGhvZD0iY21zIj4KCQk8L2xvZ2luPgoJPC9vcGVyYXRpb24+CjwvYXV0aD4K</token>
-		<sign>VlJPLEH3PLw2ET/b/oUaO7eUCRyZM05oPtvWbfKjPyxmXdRbfCgoIzm04FKfeUzCNgjlmZE/4zIERCQ0RdJMpPWFld5++FREGxT1cLb7Ao14iM96/oUfq+PWbpgLPcVO515d2d8bAq0PVmMnaqwyJLwzkDK7oZoLY6M9/8VDGB4=</sign>
+		<token>CjxhdXRoPgoJPGlkIHVuaXF1ZV9pZD0iMTQwNjk5MjA0MCIgc3JjPSJDPXB5LCBPPWRuYSwgT1U9c29maWEsIENOPXdzYWF0ZXN0IiBnZW5fdGltZT0iMjAxNC0wOC0wMlQxMDo1NzoyMC0wNDowMCIgZXhwX3RpbWU9IjIwMTQtMDgtMDJUMTE6MTc6MjAtMDQ6MDAiLz4KCTxvcGVyYXRpb24gdmFsdWU9ImdyYW50ZWQiIHR5cGU9ImxvZ2luIj4KCQk8bG9naW4gdWlkPSJDPVBZLE89c2VuZGl0Y291cnJpZXIsT1U9c29maWEsQ049Y291cmllci5zZW5kaXQiIHNlcnZpY2U9InNlcnZpY2lvdGVyZSIgYXV0aG1ldGhvZD0iY21zIj4KCQk8L2xvZ2luPgoJPC9vcGVyYXRpb24+CjwvYXV0aD4K</token>
+		<sign>RB7rEWcdEyXKNVGU1i6IfH0t/PNw3tzrLErCR3IflCUNDk/Jp7iDBHr5d4zqlXc6HGDRDtits5knoullFpUSDbhXuDH3IrxB6Acc97lPsf9JRp3f4L7CDwIlx8tgrBdzKCfj1eNYfnOYoAgso7zO2//5FpV8nnRsjpy8ZohKLcU=</sign>
 	</credentials>
 </loginTicketResponse>
