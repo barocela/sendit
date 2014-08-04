@@ -13,8 +13,11 @@ define("PASSPHRASE", "Hackeruno2@"); # The passphrase (if any) to sign
 define("SERVICE", "serviciotere");
 define("WSAAURL", "https://secure.aduana.gov.py/test/wsaa/server?wsdl/LoginCms");
 # WSAAURL: the URL to access WSAA, check for http or https and wsaa or wsaahomo
-define("TEREWSDL", "wsdl/terews.xml");
+define("TEREWSDL", "wsdl/serviciotere.xml");
 define("WSTEREURL", "https://secure.aduana.gov.py/test/tere/serviciotere?wsdl");
+
+define("WSREFERENCIA", "wsdl/reference.xml");
+define("WSREFERENCIAURL", "https://secure.aduana.gov.py/test/tere/servicioreferencia?wsdl");
 # DESTINATIONDN must contain the WSAA dn, it must be exactly as follows, you
 # should only change the "cn" portion, it should be "wsaahomo" for the testing
 # WSAA or "wsaa" for the production WSAA.
@@ -180,9 +183,9 @@ BAG</naturalezaMercaderia>
 </guiaMadre>
 EOD;
 
-//$results = $client2->__getFunctions();
     $TA = autenticate();
     $client = createClient(TEREWSDL, WSTEREURL);
+    
     $results = $client->agregarGuia($TA, $guia);
 
     echo "<pre>";

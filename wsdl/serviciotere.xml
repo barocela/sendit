@@ -1,0 +1,445 @@
+<definitions name='serviciotere' targetNamespace='http://aduana.gov.py/webservices' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://aduana.gov.py/webservices' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+ <types>
+  <xs:schema targetNamespace='http://aduana.gov.py/webservices' version='1.0' xmlns:tns='http://aduana.gov.py/webservices' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+   <xs:element name='agregarGuia' type='tns:agregarGuia'/>
+   <xs:element name='agregarGuiaResponse' type='tns:agregarGuiaResponse'/>
+   <xs:element name='anularGuia' type='tns:anularGuia'/>
+   <xs:element name='anularGuiaResponse' type='tns:anularGuiaResponse'/>
+   <xs:element name='asignarManifiesto' type='tns:asignarManifiesto'/>
+   <xs:element name='asignarManifiestoResponse' type='tns:asignarManifiestoResponse'/>
+   <xs:element name='consultaGuia' type='tns:consultaGuia'/>
+   <xs:element name='consultaGuiaResponse' type='tns:consultaGuiaResponse'/>
+   <xs:element name='consultaManifiesto' type='tns:consultaManifiesto'/>
+   <xs:element name='consultaManifiestoResponse' type='tns:consultaManifiestoResponse'/>
+   <xs:element name='consultarListaGuias' type='tns:consultarListaGuias'/>
+   <xs:element name='consultarListaGuiasResponse' type='tns:consultarListaGuiasResponse'/>
+   <xs:element name='ingresoDeposito' type='tns:ingresoDeposito'/>
+   <xs:element name='ingresoDepositoResponse' type='tns:ingresoDepositoResponse'/>
+   <xs:complexType name='agregarGuia'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='guia' type='xs:string'/>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='autenticacion'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codAduana' type='xs:string'/>
+     <xs:element minOccurs='0' name='firmaWSAA' type='xs:string'/>
+     <xs:element minOccurs='0' name='idUsuario' type='xs:string'/>
+     <xs:element minOccurs='0' name='ticketWSAA' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='agregarGuiaResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:retornoAgregarGuia'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='retornoAgregarGuia'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='idTransaccion' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='recibo' nillable='true' type='tns:Recibo'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='Recibo'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codMensaje' type='xs:string'/>
+     <xs:element minOccurs='0' name='mensaje' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='asignarManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='manifiesto' type='tns:IdManifiesto'/>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='IdManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='idSofia' type='xs:string'/>
+     <xs:element minOccurs='0' name='manifiesto' type='xs:string'/>
+     <xs:element minOccurs='0' name='prefijo' type='xs:string'/>
+     <xs:element minOccurs='0' name='titulo' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='asignarManifiestoResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:retornoAsignarManifiesto'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='retornoAsignarManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='maniGen' type='xs:string'/>
+     <xs:element minOccurs='0' name='recibo' type='tns:Recibo'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='anularGuia'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='manifiesto' type='tns:IdManifiesto'/>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='anularGuiaResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:retornoAnularLote'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='retornoAnularLote'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='estado' type='xs:string'/>
+     <xs:element minOccurs='0' name='idLoteRemesa' type='xs:string'/>
+     <xs:element minOccurs='0' name='recibo' type='tns:Recibo'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='ingresoDeposito'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='ingreso' type='xs:string'/>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='ingresoDepositoResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:retornoTransaccion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='retornoTransaccion'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='fecha' type='xs:string'/>
+     <xs:element minOccurs='0' name='idTrnSofia' type='xs:string'/>
+     <xs:element minOccurs='0' name='recibo' type='tns:Recibo'/>
+     <xs:element minOccurs='0' name='usuario' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='consultarListaGuias'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='fechaDesde' type='xs:string'/>
+     <xs:element minOccurs='0' name='fechaHasta' type='xs:string'/>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='consultarListaGuiasResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:retornoConsultarListaGuias'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='retornoConsultarListaGuias'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='guias' nillable='true' type='xs:string'/>
+     <xs:element minOccurs='0' name='recibo' type='tns:Recibo'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='consultaGuia'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='idLoteRemesa' type='xs:string'/>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='consultaGuiaResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:retornoConsultaGuia'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='retornoConsultaGuia'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='estado' type='xs:string'/>
+     <xs:element minOccurs='0' name='guia' type='tns:guiaMadre'/>
+     <xs:element minOccurs='0' name='idSofia' type='xs:string'/>
+     <xs:element minOccurs='0' name='recibo' type='tns:Recibo'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='guiaMadre'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codAduana' type='xs:string'/>
+     <xs:element minOccurs='0' name='codEmpresa' type='xs:string'/>
+     <xs:element minOccurs='0' name='fecArribo' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='guiasHija' nillable='true' type='tns:guiaHija'/>
+     <xs:element minOccurs='0' name='idLoteRemesa' type='xs:string'/>
+     <xs:element minOccurs='0' name='medio' type='xs:string'/>
+     <xs:element minOccurs='0' name='paisCodProc' type='xs:string'/>
+     <xs:element minOccurs='0' name='paisMedTrans' type='xs:string'/>
+     <xs:element minOccurs='0' name='paisTrans' type='xs:string'/>
+     <xs:element minOccurs='0' name='usuRemesa' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='guiaHija'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codArmonizado' type='xs:string'/>
+     <xs:element minOccurs='0' name='codigoMoneda' type='xs:string'/>
+     <xs:element minOccurs='0' name='destinatario' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='lineas' nillable='true' type='tns:linea'/>
+     <xs:element minOccurs='0' name='maniPrimeraFraccion' type='xs:string'/>
+     <xs:element minOccurs='0' name='nroHijo' type='xs:string'/>
+     <xs:element minOccurs='0' name='paisOrigen' type='xs:string'/>
+     <xs:element minOccurs='0' name='paisProc' type='xs:string'/>
+     <xs:element minOccurs='0' name='primeraFraccion' type='xs:string'/>
+     <xs:element minOccurs='0' name='sujetoControl' type='xs:string'/>
+     <xs:element minOccurs='0' name='tipoOperacion' type='xs:string'/>
+     <xs:element minOccurs='0' name='tipoPaquete' type='xs:string'/>
+     <xs:element minOccurs='0' name='valorDol' type='xs:string'/>
+     <xs:element minOccurs='0' name='valorMoneda' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='linea'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='cantBultosPar' type='xs:string'/>
+     <xs:element minOccurs='0' name='cantBultosTot' type='xs:string'/>
+     <xs:element minOccurs='0' name='codArmonizado' type='xs:string'/>
+     <xs:element minOccurs='0' name='naturalezaMercaderia' type='xs:string'/>
+     <xs:element minOccurs='0' name='numeroTicket' type='xs:string'/>
+     <xs:element minOccurs='0' name='pesoBultosPar' type='xs:string'/>
+     <xs:element minOccurs='0' name='pesoBultosTot' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='consultaManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='manifiesto' type='xs:string'/>
+     <xs:element minOccurs='0' name='autenticacion' type='tns:autenticacion'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='consultaManifiestoResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:retornoConsultaManifiesto'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='retornoConsultaManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='manifiesto' type='tns:manifiesto'/>
+     <xs:element minOccurs='0' name='recibo' type='tns:Recibo'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='manifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='aeroProc' type='xs:string'/>
+     <xs:element minOccurs='0' name='avionCarg' type='xs:string'/>
+     <xs:element minOccurs='0' name='comentarios' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='contenedores' nillable='true' type='tns:contenedorManifiesto'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='datosTransportista' nillable='true' type='tns:intervencionManifiesto'/>
+     <xs:element minOccurs='0' name='descHab' type='xs:string'/>
+     <xs:element minOccurs='0' name='desconsolidado' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='despachos' nillable='true' type='tns:despachoManifiesto'/>
+     <xs:element minOccurs='0' name='documento' type='xs:string'/>
+     <xs:element minOccurs='0' name='estado' type='xs:string'/>
+     <xs:element minOccurs='0' name='fechaArribo' type='xs:string'/>
+     <xs:element minOccurs='0' name='fechaDescarga' type='xs:string'/>
+     <xs:element minOccurs='0' name='fechaReg' type='xs:string'/>
+     <xs:element minOccurs='0' name='idSofia' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='intervenciones' nillable='true' type='tns:intervencionManifiesto'/>
+     <xs:element minOccurs='0' name='medioTrans' type='xs:string'/>
+     <xs:element minOccurs='0' name='mercBodo' type='xs:string'/>
+     <xs:element minOccurs='0' name='paisProc' type='xs:string'/>
+     <xs:element minOccurs='0' name='paisTrans' type='xs:string'/>
+     <xs:element minOccurs='0' name='plazoRezago' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='prorrogas' nillable='true' type='tns:prorrogaManifiesto'/>
+     <xs:element minOccurs='0' name='tipoOp' type='xs:string'/>
+     <xs:element minOccurs='0' name='transpVacio' type='xs:string'/>
+     <xs:element minOccurs='0' name='transportista' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='contenedorManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='comentario' type='xs:string'/>
+     <xs:element minOccurs='0' name='condicion' type='xs:string'/>
+     <xs:element minOccurs='0' name='despacho' type='xs:string'/>
+     <xs:element minOccurs='0' name='medida' type='xs:string'/>
+     <xs:element minOccurs='0' name='nroContenedor' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='intervencionManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='conocimiento' type='xs:string'/>
+     <xs:element minOccurs='0' name='consignatario' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='datosTitulo' nillable='true' type='tns:datosTituloManifiesto'/>
+     <xs:element minOccurs='0' name='descripcion' type='xs:string'/>
+     <xs:element minOccurs='0' name='intenvencion' type='xs:string'/>
+     <xs:element minOccurs='0' name='linea' type='xs:string'/>
+     <xs:element minOccurs='0' name='prefijo' type='xs:string'/>
+     <xs:element minOccurs='0' name='titPadre' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='datosTituloManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='cantAfectar' type='xs:string'/>
+     <xs:element minOccurs='0' name='cantFaltSobran' type='xs:string'/>
+     <xs:element minOccurs='0' name='cantPar' type='xs:string'/>
+     <xs:element minOccurs='0' name='cantTotal' type='xs:string'/>
+     <xs:element minOccurs='0' name='codEmbalaje' type='xs:string'/>
+     <xs:element minOccurs='0' name='codUnidadMerc' type='xs:string'/>
+     <xs:element minOccurs='0' name='comentario' type='xs:string'/>
+     <xs:element minOccurs='0' name='condContenedor' type='xs:string'/>
+     <xs:element minOccurs='0' name='descEmbalaje' type='xs:string'/>
+     <xs:element minOccurs='0' name='descripcion' type='xs:string'/>
+     <xs:element minOccurs='0' name='indicadorCombus' type='xs:string'/>
+     <xs:element minOccurs='0' name='litrosCombus' type='xs:string'/>
+     <xs:element minOccurs='0' name='nroBultos' type='xs:string'/>
+     <xs:element minOccurs='0' name='partidaCombus' type='xs:string'/>
+     <xs:element minOccurs='0' name='pesoAfectar' type='xs:string'/>
+     <xs:element minOccurs='0' name='pesoFaltSobran' type='xs:string'/>
+     <xs:element minOccurs='0' name='pesoParMerc' type='xs:string'/>
+     <xs:element minOccurs='0' name='pesoTotal' type='xs:string'/>
+     <xs:element minOccurs='0' name='tipoEmbalaje' type='xs:string'/>
+     <xs:element minOccurs='0' name='tipoMerc' type='xs:string'/>
+     <xs:element minOccurs='0' name='unidadMedidaDesc' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='despachoManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='despacho' type='xs:string'/>
+     <xs:element minOccurs='0' name='fechaOfic' type='xs:string'/>
+     <xs:element minOccurs='0' name='name' type='xs:string'/>
+     <xs:element minOccurs='0' name='prefijo' type='xs:string'/>
+     <xs:element minOccurs='0' name='titulo' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='prorrogaManifiesto'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='fecha' type='xs:string'/>
+     <xs:element minOccurs='0' name='fechaAnt' type='xs:string'/>
+     <xs:element minOccurs='0' name='observacion' type='xs:string'/>
+     <xs:element minOccurs='0' name='usuario' type='xs:string'/>
+     <xs:element minOccurs='0' name='usuarioDesc' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+  </xs:schema>
+ </types>
+ <message name='serviciotereSoap_asignarManifiestoResponse'>
+  <part element='tns:asignarManifiestoResponse' name='asignarManifiestoResponse'></part>
+ </message>
+ <message name='serviciotereSoap_agregarGuiaResponse'>
+  <part element='tns:agregarGuiaResponse' name='agregarGuiaResponse'></part>
+ </message>
+ <message name='serviciotereSoap_consultaGuia'>
+  <part element='tns:consultaGuia' name='consultaGuia'></part>
+ </message>
+ <message name='serviciotereSoap_agregarGuia'>
+  <part element='tns:agregarGuia' name='agregarGuia'></part>
+ </message>
+ <message name='serviciotereSoap_asignarManifiesto'>
+  <part element='tns:asignarManifiesto' name='asignarManifiesto'></part>
+ </message>
+ <message name='serviciotereSoap_consultaManifiesto'>
+  <part element='tns:consultaManifiesto' name='consultaManifiesto'></part>
+ </message>
+ <message name='serviciotereSoap_consultarListaGuiasResponse'>
+  <part element='tns:consultarListaGuiasResponse' name='consultarListaGuiasResponse'></part>
+ </message>
+ <message name='serviciotereSoap_anularGuiaResponse'>
+  <part element='tns:anularGuiaResponse' name='anularGuiaResponse'></part>
+ </message>
+ <message name='serviciotereSoap_anularGuia'>
+  <part element='tns:anularGuia' name='anularGuia'></part>
+ </message>
+ <message name='serviciotereSoap_ingresoDepositoResponse'>
+  <part element='tns:ingresoDepositoResponse' name='ingresoDepositoResponse'></part>
+ </message>
+ <message name='serviciotereSoap_consultaManifiestoResponse'>
+  <part element='tns:consultaManifiestoResponse' name='consultaManifiestoResponse'></part>
+ </message>
+ <message name='serviciotereSoap_consultarListaGuias'>
+  <part element='tns:consultarListaGuias' name='consultarListaGuias'></part>
+ </message>
+ <message name='serviciotereSoap_consultaGuiaResponse'>
+  <part element='tns:consultaGuiaResponse' name='consultaGuiaResponse'></part>
+ </message>
+ <message name='serviciotereSoap_ingresoDeposito'>
+  <part element='tns:ingresoDeposito' name='ingresoDeposito'></part>
+ </message>
+ <portType name='serviciotereSoap'>
+  <operation name='agregarGuia' parameterOrder='agregarGuia'>
+   <input message='tns:serviciotereSoap_agregarGuia'></input>
+   <output message='tns:serviciotereSoap_agregarGuiaResponse'></output>
+  </operation>
+  <operation name='anularGuia' parameterOrder='anularGuia'>
+   <input message='tns:serviciotereSoap_anularGuia'></input>
+   <output message='tns:serviciotereSoap_anularGuiaResponse'></output>
+  </operation>
+  <operation name='asignarManifiesto' parameterOrder='asignarManifiesto'>
+   <input message='tns:serviciotereSoap_asignarManifiesto'></input>
+   <output message='tns:serviciotereSoap_asignarManifiestoResponse'></output>
+  </operation>
+  <operation name='consultaGuia' parameterOrder='consultaGuia'>
+   <input message='tns:serviciotereSoap_consultaGuia'></input>
+   <output message='tns:serviciotereSoap_consultaGuiaResponse'></output>
+  </operation>
+  <operation name='consultaManifiesto' parameterOrder='consultaManifiesto'>
+   <input message='tns:serviciotereSoap_consultaManifiesto'></input>
+   <output message='tns:serviciotereSoap_consultaManifiestoResponse'></output>
+  </operation>
+  <operation name='consultarListaGuias' parameterOrder='consultarListaGuias'>
+   <input message='tns:serviciotereSoap_consultarListaGuias'></input>
+   <output message='tns:serviciotereSoap_consultarListaGuiasResponse'></output>
+  </operation>
+  <operation name='ingresoDeposito' parameterOrder='ingresoDeposito'>
+   <input message='tns:serviciotereSoap_ingresoDeposito'></input>
+   <output message='tns:serviciotereSoap_ingresoDepositoResponse'></output>
+  </operation>
+ </portType>
+ <binding name='serviciotereSoapBinding' type='tns:serviciotereSoap'>
+  <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='agregarGuia'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+  <operation name='anularGuia'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+  <operation name='asignarManifiesto'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+  <operation name='consultaGuia'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+  <operation name='consultaManifiesto'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+  <operation name='consultarListaGuias'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+  <operation name='ingresoDeposito'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+ </binding>
+ <service name='serviciotere'>
+  <port binding='tns:serviciotereSoapBinding' name='serviciotereSoap'>
+   <soap:address location='http://192.4.1.39:8180/tere/serviciotere'/>
+  </port>
+ </service>
+</definitions>
