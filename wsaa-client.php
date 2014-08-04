@@ -133,85 +133,74 @@ function createClient($wsdl, $url) {
     return $client;
 }
 
-function addGguia() {
-    $guia = <<<EOD
-<guiaMadre>
-<idLoteRemesa>14XXX0000000011P</idLoteRemesa>
-<codAduana>704</codAduana>
-<codEmpresa>666</codEmpresa>
-<medio>2</medio>
-<fecArribo>20141203</fecArribo>
-<paisTrans>512</paisTrans>
-<paisMedTrans>512</paisMedTrans>
-<paisCodProc>400</paisCodProc>
-<guiasHija>
-<guiaHija>
-<nroHijo>1588000774</nroHijo>
-<destinatario>destinatario particular</destinatario>
-<tipoOperacion>SNTD</tipoOperacion>
-<valorDol>5000</valorDol>
-<tipoPaquete>COU</tipoPaquete>
-<primeraFraccion>N</primeraFraccion>
-<maniPrimeraFraccion></maniPrimeraFraccion>
-<sujetoControl>N</sujetoControl>
-<paisOrigen>512</paisOrigen>
-<paisProc>400</paisProc>
-<lineas>
-<linea>
-<numeroTicket>1255429</numeroTicket>
-<cantBultosPar>1</cantBultosPar>
-<pesoBultosPar>3.445</pesoBultosPar>
-<cantBultosTot>1</cantBultosTot>
-<pesoBultosTot>3.445</pesoBultosTot>
-<naturalezaMercaderia>DIPLOMATIC
-BAG</naturalezaMercaderia>
-<codArmonizado>4823.40.00.000</codArmonizado>
-</linea>
-<linea>
-<numeroTicket>1255430</numeroTicket>
-<cantBultosPar>1</cantBultosPar>
-<pesoBultosPar>3.445</pesoBultosPar>
-<cantBultosTot>1</cantBultosTot>
-<pesoBultosTot>3.445</pesoBultosTot>
-<naturalezaMercaderia>DIPLOMATIC
-BAG</naturalezaMercaderia>
-<codArmonizado>4823.40.00.000</codArmonizado>
-</linea>
-</lineas>
-</guiaHija>
-</guiasHija>
-</guiaMadre>
+function addManifiesto() {
+    $autentication = <<<EOD
+            <autenticacion>
+                <idUsuario>wsaatest</idUsuario>
+                <codAduana>704</codAduana>
+                <firma>FXuFJFeBnXLSmpjqQmtpWfbDfaqvNKfI0l+goUYdlQevfdFcaXlovhpKN1ikyBVS0LunHQ8CcFzv/e2ye6Vx6+dvby4UydcsGeKEAtvSJaJxYvZGvHXhJhhqvKXE88dNzyQgFdAeStTXYG0URiSVY+awPV0RUqQWB8GWo3OJsbg=</firma>
+                <token>CjxhdXRoPgoJPGlkIHVuaXF1ZV9pZD0iMTQwNzE3MDMxNyIgc3JjPSJDPXB5LCBPPWRuYSwgT1U9c29maWEsIENOPXdzYWF0ZXN0IiBnZW5fdGltZT0iMjAxNC0wOC0wNFQxMjoyODozNy0wNDowMCIgZXhwX3RpbWU9IjIwMTQtMDgtMDRUMTI6NDg6MzctMDQ6MDAiLz4KCTxvcGVyYXRpb24gdmFsdWU9ImdyYW50ZWQiIHR5cGU9ImxvZ2luIj4KCQk8bG9naW4gdWlkPSJDPVBZLE89c2VuZGl0Y291cnJpZXIsT1U9c29maWEsQ049Y291cmllci5zZW5kaXQiIHNlcnZpY2U9InNlcnZpY2lvdGVyZSIgYXV0aG1ldGhvZD0iY21zIj4KCQk8L2xvZ2luPgoJPC9vcGVyYXRpb24+CjwvYXV0aD4K</token>
+            </autenticacion>
+EOD;
+    $manifiesto = <<<EOD
+            <manifiesto xmlns="">
+                    <idSofia>14704TERE000422F</idSofia>
+            </manifiesto>
 EOD;
 
     $TA = autenticate();
     $client = createClient(TEREWSDL, WSTEREURL);
-    
-    $results = $client->agregarGuia($TA, $guia);
 
-    echo "<pre>";
-    var_dump($results);
-    die;
+//    $results = $client->agregarGuia($guia, array("codAduana" => "A23434"));
+    $results = $client->AsignarManifiesto($manifiesto, $autentication);
 
     if (is_soap_fault($results)) {
         exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
     }
 }
 
+function getAduanas() {
+//    $autentication = <<<EOD
+//            <autenticacion>
+//                <idUsuario>wsaatest</idUsuario>
+//                <codAduana>704</codAduana>
+//                <firma>FXuFJFeBnXLSmpjqQmtpWfbDfaqvNKfI0l+goUYdlQevfdFcaXlovhpKN1ikyBVS0LunHQ8CcFzv/e2ye6Vx6+dvby4UydcsGeKEAtvSJaJxYvZGvHXhJhhqvKXE88dNzyQgFdAeStTXYG0URiSVY+awPV0RUqQWB8GWo3OJsbg=</firma>
+//                <token>CjxhdXRoPgoJPGlkIHVuaXF1ZV9pZD0iMTQwNzE3MDMxNyIgc3JjPSJDPXB5LCBPPWRuYSwgT1U9c29maWEsIENOPXdzYWF0ZXN0IiBnZW5fdGltZT0iMjAxNC0wOC0wNFQxMjoyODozNy0wNDowMCIgZXhwX3RpbWU9IjIwMTQtMDgtMDRUMTI6NDg6MzctMDQ6MDAiLz4KCTxvcGVyYXRpb24gdmFsdWU9ImdyYW50ZWQiIHR5cGU9ImxvZ2luIj4KCQk8bG9naW4gdWlkPSJDPVBZLE89c2VuZGl0Y291cnJpZXIsT1U9c29maWEsQ049Y291cmllci5zZW5kaXQiIHNlcnZpY2U9InNlcnZpY2lvdGVyZSIgYXV0aG1ldGhvZD0iY21zIj4KCQk8L2xvZ2luPgoJPC9vcGVyYXRpb24+CjwvYXV0aD4K</token>
+//            </autenticacion>
+//EOD;
+
+    $TA = autenticate();
+    $xml = simplexml_load_string($TA);
+    
+    $data = $xml->credentials;
+    
+    $autentication = new stdClass();
+    $autentication->idUsuario = 'wsaatest';
+    $autentication->codAduana = '704';
+    $autentication->firma = (string)$data->sign;
+    $autentication->token = (string)$data->token;
+
+    $client = createClient(WSREFERENCIA, WSREFERENCIAURL);
+    $results = $client->getAduanas($autentication);
+
+    if (is_soap_fault($results)) {
+        exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
+    }
+}
 
 include("csv2xml.php");
 
-function convert($filename){
+function convert($filename) {
     //Create the instance of the class
     $csv2xml = new csv2xml();
     //Set the root node for the XML
     $csv2xml->setRootNode("guiaMadre");
     // Set the recurring node for the XML
-    $csv2xml->setRecurringNode("guiaHija"); 
-    $csv2xml->setCSVFile($filename.".csv"); 
+    $csv2xml->setRecurringNode("guiaHija");
+    $csv2xml->setCSVFile($filename . ".csv");
     //Convert the file
-    $csv2xml->convertCSV2XML();     
+    $csv2xml->convertCSV2XML();
 }
 
-addGguia();
-
+getAduanas();
 ?>
