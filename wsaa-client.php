@@ -157,7 +157,6 @@ function createClient($wsdl, $url) {
 function getAduanas() {
 
     $autentication = autenticate();
-
     $client = createClient(WSREFERENCIA, WSREFERENCIAURL);
     $results = $client->getAduanas($autentication);
 
