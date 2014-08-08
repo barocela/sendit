@@ -1,6 +1,6 @@
 <?php
 
-class Autentication {
+class Autenticacion {
 
     public $codAduana;
     public $firmaWSAA;
@@ -25,8 +25,8 @@ define("WSAAURL", "https://secure.aduana.gov.py/test/wsaa/server?wsdl/LoginCms")
 define("TEREWSDL", "wsdl/serviciotere.xml");
 define("WSTEREURL", "https://secure.aduana.gov.py/test/tere/serviciotere?wsdl");
 
-define("WSREFERENCIA", "wsdl/reference.xml");
-define("WSREFERENCIAURL", "https://secure.aduana.gov.py/test/tere/servicioreferencia?wsdl");
+define("WSREFERENCIAURL", "https://secure.aduana.gov.py/tere/servicioreferencia");
+define("WSREFERENCIA", "https://secure.aduana.gov.py/wsdl/tere/servicioreferencia");
 # DESTINATIONDN must contain the WSAA dn, it must be exactly as follows, you
 # should only change the "cn" portion, it should be "wsaahomo" for the testing
 # WSAA or "wsaa" for the production WSAA.
@@ -129,12 +129,11 @@ function autenticate() {
     $firma = (string) $data->sign;
     $token = (string) $data->token;
 
-    $autentication = new Autentication();
+    $autentication = new Autenticacion();
     $autentication->firmaWSAA = $firma;
     $autentication->codAduana = '704';
     $autentication->idUsuario = 'courier.sendit';
     $autentication->ticketWSAA = $token;
-    
     return $autentication;
 }
 
@@ -159,6 +158,21 @@ function getAduanas() {
     $autentication = autenticate();
     $client = createClient(WSREFERENCIA, WSREFERENCIAURL);
     $results = $client->getAduanas($autentication);
+
+    if (is_soap_fault($results)) {
+        exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
+    } else {
+        echo "<pre>";
+        print_r($results);
+        die;
+    }
+}
+
+function consultarGuia() {
+
+    $autentication = autenticate();
+    $client = createClient(TEREWSDL, WSTEREURL);
+    $results = $client->consultaGuia($autentication);
 
     if (is_soap_fault($results)) {
         exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
