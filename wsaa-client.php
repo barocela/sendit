@@ -1,11 +1,40 @@
 <?php
 
+
+include("csv2xml.php");
+include("WSSESoapClient.php");
+
 class Autenticacion {
 
     public $codAduana;
     public $firmaWSAA;
     public $idUsuario;
     public $ticketWSAA;
+
+}
+
+class AuthObject {
+    function AuthObject($autenticacion) {
+        $this->autenticacion = $autenticacion;
+    }
+}
+
+class Manifiesto{
+    function Manifiesto($idSofia, $manifiesto, $prefijo, $titulo) {
+        $this->idSofia = $idSofia;
+        $this->manifiesto = $manifiesto;
+        $this->prefijo = $prefijo;
+        $this->titulo = $titulo;
+    }
+}
+
+class consultarGuia {
+
+    function consultarGuia($fechaDesde,$fechaHasta, $autenticacion) {
+        $this->fechaDesde = $fechaDesde;
+        $this->fechaHasta = $fechaHasta;
+        $this->autenticacion = $autenticacion;
+    }
 
 }
 
@@ -22,11 +51,11 @@ define("PASSPHRASE", "Hackeruno2@"); # The passphrase (if any) to sign
 define("SERVICE", "serviciotere");
 define("WSAAURL", "https://secure.aduana.gov.py/test/wsaa/server?wsdl/LoginCms");
 # WSAAURL: the URL to access WSAA, check for http or https and wsaa or wsaahomo
-define("TEREWSDL", "wsdl/serviciotere.xml");
-define("WSTEREURL", "https://secure.aduana.gov.py/test/tere/serviciotere?wsdl");
+define("TERE_WSDL", "https://secure.aduana.gov.py/test/wsdl/tere/serviciotere");
+define("TERE_URL", "https://secure.aduana.gov.py/test/tere/serviciotere");
 
-define("WSREFERENCIAURL", "https://secure.aduana.gov.py/tere/servicioreferencia");
-define("WSREFERENCIA", "https://secure.aduana.gov.py/wsdl/tere/servicioreferencia");
+define("REFERENCIA_URL", "https://secure.aduana.gov.py/test/tere/servicioreferencia");
+define("REFERENCIA_WSDL", "https://secure.aduana.gov.py/test/wsdl/tere/servicioreferencia");
 # DESTINATIONDN must contain the WSAA dn, it must be exactly as follows, you
 # should only change the "cn" portion, it should be "wsaahomo" for the testing
 # WSAA or "wsaa" for the production WSAA.
@@ -122,7 +151,6 @@ function autenticate() {
         exit("Error writing generate/TA.xml\n");
     }
 
-    
     $xmlresult = simplexml_load_string($TA);
 
     $data = $xmlresult->credentials;
@@ -130,11 +158,13 @@ function autenticate() {
     $token = (string) $data->token;
 
     $autentication = new Autenticacion();
+    $autentication->codAduana = "704";
     $autentication->firmaWSAA = $firma;
-    $autentication->codAduana = '704';
-    $autentication->idUsuario = 'courier.sendit';
+    $autentication->idUsuario = "courier.sendit";
     $autentication->ticketWSAA = $token;
-    return $autentication;
+
+    return $autentication; 
+
 }
 
 function createClient($wsdl, $url) {
@@ -143,7 +173,9 @@ function createClient($wsdl, $url) {
     $options['location'] = $url;
     $options['trace'] = 1;
     $options['exceptions'] = 0;
+//    $options['features'] = SOAP_SINGLE_ELEMENT_ARRAYS;
     $options['soap_version'] = SOAP_1_2;
+
     if (PROXY) {
         $options['proxy_host'] = "10.104.0.172";
         $options['proxy_port'] = "1111";
@@ -155,10 +187,40 @@ function createClient($wsdl, $url) {
 
 function getAduanas() {
 
+    $client = createClient(REFERENCIA_WSDL, REFERENCIA_URL);
     $autentication = autenticate();
-    $client = createClient(WSREFERENCIA, WSREFERENCIAURL);
-    $results = $client->getAduanas($autentication);
+    
+    
+    $objAuth = new AuthObject($autentication);
+    $autentication_obj = new SoapVar($objAuth, SOAP_ENC_OBJECT);
 
+//    $results = $client->getAduanas($autentication);
+    $results = $client->getMoneda($autentication_obj);
+    
+    if (is_soap_fault($results)) {
+        exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
+    } else {
+        echo "<pre>";
+        print_r($results);
+        die;
+    }
+    
+    
+}
+
+function consultarListaGuias() {
+    $autentication = autenticate();
+    $client = createClient(TERE_WSDL, TERE_URL);
+    
+    $consultar_guia = new consultarGuia("20140301", "20140801", $autentication);
+    $params = new SoapVar($consultar_guia, SOAP_ENC_OBJECT);
+//    $results = $client->consultarListaGuias($params);
+    $results = $client->__getTypes();
+//    
+//    echo "<pre>";
+//    print_r($client->__getLastRequest());
+//    die;
+    
     if (is_soap_fault($results)) {
         exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
     } else {
@@ -167,23 +229,6 @@ function getAduanas() {
         die;
     }
 }
-
-function consultarGuia() {
-
-    $autentication = autenticate();
-    $client = createClient(TEREWSDL, WSTEREURL);
-    $results = $client->consultaGuia($autentication);
-
-    if (is_soap_fault($results)) {
-        exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
-    } else {
-        echo "<pre>";
-        print_r($results);
-        die;
-    }
-}
-
-include("csv2xml.php");
 
 function convert($filename) {
 //Create the instance of the class
@@ -197,5 +242,9 @@ function convert($filename) {
     $csv2xml->convertCSV2XML();
 }
 
-getAduanas();
+//consultarGuia();
+//getAduanas();
+
+consultarListaGuias();
+
 ?>
