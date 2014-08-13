@@ -1,8 +1,7 @@
 <?php
 
-
 include("csv2xml.php");
-include("WSSESoapClient.php");
+include("TereClient.php");
 
 class Autenticacion {
 
@@ -13,24 +12,78 @@ class Autenticacion {
 
 }
 
+class linea {
+
+    public $cantBultosPar;
+    public $cantBultosTot;
+    public $codArmonizado;
+    public $naturalezaMercaderia;
+    public $numeroTicket;
+    public $pesoBultosPar;
+    public $pesoBultosTot;
+
+}
+
+class guiaHija {
+
+    public $destinatario;
+    public $lineas;
+    public $maniPrimeraFraccion;
+    public $nroHijo;
+    public $paisOrigen;
+    public $paisProc;
+    public $primeraFraccion;
+    public $sujetoControl;
+    public $tipoOperacion;
+    public $tipoPaquete;
+    public $valorDol;
+
+}
+
+class guiaMadre {
+    public $guiasHija;
+    public $codAduana;
+    public $codEmpresa;
+    public $fecArribo;
+    public $idLoteRemesa;
+    public $medio;
+    public $paisCodProc;
+    public $paisMedTrans;
+    public $paisTrans;
+}
+
+
+class terews{
+    public $guiasMadre;
+}
+
+class guia{
+    public $terews;
+}
+
+
 class AuthObject {
+
     function AuthObject($autenticacion) {
         $this->autenticacion = $autenticacion;
     }
+
 }
 
-class Manifiesto{
+class Manifiesto {
+
     function Manifiesto($idSofia, $manifiesto, $prefijo, $titulo) {
         $this->idSofia = $idSofia;
         $this->manifiesto = $manifiesto;
         $this->prefijo = $prefijo;
         $this->titulo = $titulo;
     }
+
 }
 
 class consultarGuia {
 
-    function consultarGuia($fechaDesde,$fechaHasta, $autenticacion) {
+    function consultarGuia($fechaDesde, $fechaHasta, $autenticacion) {
         $this->fechaDesde = $fechaDesde;
         $this->fechaHasta = $fechaHasta;
         $this->autenticacion = $autenticacion;
@@ -163,11 +216,10 @@ function autenticate() {
     $autentication->idUsuario = "courier.sendit";
     $autentication->ticketWSAA = $token;
 
-    return $autentication; 
-
+    return $autentication;
 }
 
-function createClient($wsdl, $url) {
+function createClient($wsdl, $url, $wsse = false) {
 
     $options = array();
     $options['location'] = $url;
@@ -181,7 +233,11 @@ function createClient($wsdl, $url) {
         $options['proxy_port'] = "1111";
     }
 
-    $client = new SoapClient($wsdl, $options);
+    if ($wsse) {
+        $client = new TereClient($wsdl, $options);
+    } else {
+        $client = new SoapClient($wsdl, $options);
+    }
     return $client;
 }
 
@@ -189,13 +245,75 @@ function getAduanas() {
 
     $client = createClient(REFERENCIA_WSDL, REFERENCIA_URL);
     $autentication = autenticate();
-    
-    
+
+
     $objAuth = new AuthObject($autentication);
     $autentication_obj = new SoapVar($objAuth, SOAP_ENC_OBJECT);
 
 //    $results = $client->getAduanas($autentication);
     $results = $client->getMoneda($autentication_obj);
+
+    if (is_soap_fault($results)) {
+        exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
+    } else {
+        echo "<pre>";
+        print_r($results);
+        die;
+    }
+}
+
+function addGuia() {
+
+    $client = createClient(TERE_WSDL, TERE_URL, true);
+    $autentication = autenticate();
+
+    $objAuth = new AuthObject($autentication);
+    $autentication_obj = new SoapVar($objAuth, SOAP_ENC_OBJECT);
+
+    
+    $linea = new linea();
+    $linea->cantBultosPar = 1;
+    $linea->cantBultosTot=1;
+    $linea->codArmonizado = 1901.01;
+    $linea->naturalezaMercaderia = "DULDE DE LECHE";
+    $linea->numeroTicket = 1;
+    $linea->pesoBultosPar = 4.51;
+    $linea->pesoBultosTot = 4.51;
+    
+    $guia_hija = new guiaHija();
+    $guia_hija->destinatario = "Juan Perez";
+    $guia_hija->lineas=array($linea);
+    $guia_hija->maniPrimeraFraccion='';
+    $guia_hija->nroHijo = "000138446";
+    $guia_hija->paisOrigen = 528;
+    $guia_hija->primeraFraccion = "N";
+    $guia_hija->sujetoControl = "N";
+    $guia_hija->tipoOperacion = "SNTD";
+    $guia_hija->tipoPaquete = "COU";
+    $guia_hija->valorDol = 15;
+    
+    $guia_madre = new guiaMadre();
+    $guia_madre->codAduana = 704;
+    $guia_madre->codEmpresa = 681;
+    $guia_madre->fecArribo = "20140127";
+    $guia_madre->idLoteRemesa = "14XXX0000000719C";
+    $guia_madre->medio = 2;
+    $guia_madre->paisCodProc = 512;
+    $guia_madre->paisMedTrans = 512;
+    $guia_madre->paisTrans = 512;
+    $guia_madre->guiasHija = array($guia_hija);
+    
+    $terews = new terews();
+    $terews->guiasMadre= array($guia_madre);
+    
+    $guia = new guia();
+    $guia->terews = array($terews);
+    
+    $results = $client->agregarGuia($guia, $autentication_obj);
+
+    echo "<pre>";
+    print_r($client->__getLastRequest());
+    die;
     
     if (is_soap_fault($results)) {
         exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
@@ -204,23 +322,18 @@ function getAduanas() {
         print_r($results);
         die;
     }
-    
-    
 }
 
 function consultarListaGuias() {
     $autentication = autenticate();
-    $client = createClient(TERE_WSDL, TERE_URL);
-    
+    $client = createClient(TERE_WSDL, TERE_URL, true);
+
     $consultar_guia = new consultarGuia("20140301", "20140801", $autentication);
     $params = new SoapVar($consultar_guia, SOAP_ENC_OBJECT);
-//    $results = $client->consultarListaGuias($params);
-    $results = $client->__getTypes();
-//    
-//    echo "<pre>";
-//    print_r($client->__getLastRequest());
-//    die;
-    
+
+    $client->consultarListaGuias($params);
+    $results = $client->__getLastRequestHeaders();
+
     if (is_soap_fault($results)) {
         exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
     } else {
@@ -244,7 +357,7 @@ function convert($filename) {
 
 //consultarGuia();
 //getAduanas();
+//consultarListaGuias();
 
-consultarListaGuias();
-
+addGuia();
 ?>
