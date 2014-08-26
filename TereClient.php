@@ -6,37 +6,41 @@ class TereClient extends SoapClient {
 
    
    function __doRequest($request, $location, $saction, $version) {
-        $dom = new DOMDocument();
-        $dom->loadXML($request);
+        $dom_obj = new DOMDocument();
+        $dom_obj->loadXML($request);
 
-        $objWSA = new WSASoap($dom);
-        $objWSA->addAction($saction);
-        $objWSA->addTo($location);
-        $objWSA->addMessageID();
-        $objWSA->addReplyTo();
+        $objWSA = new WSASoap($dom_obj);
+//        $objWSA->addAction($saction);
+//        $objWSA->addTo($location);
+//        $objWSA->addMessageID();
+//        $objWSA->addReplyTo();
 
         $dom = $objWSA->getDoc();
 
-        $objWSSE = new WSSESoap($dom);
+        $objWSSE = new WSSESoap($dom, true, false);
         /* Sign all headers to include signing the WS-Addressing headers */
-        $objWSSE->signAllHeaders = TRUE;
+        $objWSSE->signAllHeaders = FALSE;
 
         $objWSSE->addTimestamp();
 
         /* create new XMLSec Key using RSA SHA-1 and type is private key */
         $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type'=>'private'));
-
+        $objKey->passphrase=PASSPHRASE;
+        
         /* load the private key from file - last arg is bool if key in file (TRUE) or is string (FALSE) */
         $objKey->loadKey(PRIVATEKEY, TRUE);
 
         /* Sign the message - also signs appropraite WS-Security items */
         $objWSSE->signSoapDoc($objKey);
 
+        $token = $objWSSE->addBinaryToken(file_get_contents(CERT), TRUE);
+        
         /* Add certificate (BinarySecurityToken) to the message and attach pointer to Signature */
-        $token = $objWSSE->addBinaryToken(file_get_contents(CERT));
         $objWSSE->attachTokentoSig($token);
 
         $request = $objWSSE->saveXML();
+        
+//        echo $request; die; //si descomentareas aqui puedes ver lo que esta enviando
         return parent::__doRequest($request, $location, $saction, $version);
    }
    

@@ -52,7 +52,6 @@ class guiaMadre {
     public $paisTrans;
 }
 
-
 class terews{
     public $guiasMadre;
 }
@@ -60,6 +59,38 @@ class terews{
 class guia{
     public $terews;
 }
+
+class guiaObj {
+    function guiaObj($guia){
+        $this->guia = $guia;
+    }
+}
+
+class terewsObj {
+    function terewsObj($terews){
+        $this->terews = $terews;
+    }
+}
+
+class guiaMadreObj {
+    function guiaMadreObj($guiaMadre){
+        $this->guiaMadre = $guiaMadre;
+    }
+}
+
+class guiaHijaObj {
+    function guiaHijaObj($guiaHija){
+        $this->guiaHija = $guiaHija;
+    }
+}
+
+class lineaObj {
+    function lineaObj($linea){
+        $this->linea = $linea;
+    }
+}
+
+
 
 
 class AuthObject {
@@ -269,6 +300,7 @@ function addGuia() {
 
     $objAuth = new AuthObject($autentication);
     $autentication_obj = new SoapVar($objAuth, SOAP_ENC_OBJECT);
+    
 
     
     $linea = new linea();
@@ -279,10 +311,12 @@ function addGuia() {
     $linea->numeroTicket = 1;
     $linea->pesoBultosPar = 4.51;
     $linea->pesoBultosTot = 4.51;
+
+    $linea_obj = new lineaObj($linea);
     
     $guia_hija = new guiaHija();
     $guia_hija->destinatario = "Juan Perez";
-    $guia_hija->lineas=array($linea);
+    $guia_hija->lineas=array($linea_obj);
     $guia_hija->maniPrimeraFraccion='';
     $guia_hija->nroHijo = "000138446";
     $guia_hija->paisOrigen = 528;
@@ -291,6 +325,8 @@ function addGuia() {
     $guia_hija->tipoOperacion = "SNTD";
     $guia_hija->tipoPaquete = "COU";
     $guia_hija->valorDol = 15;
+    
+    $guia_hija_obj = new guiaHijaObj($guia_hija);
     
     $guia_madre = new guiaMadre();
     $guia_madre->codAduana = 704;
@@ -301,25 +337,29 @@ function addGuia() {
     $guia_madre->paisCodProc = 512;
     $guia_madre->paisMedTrans = 512;
     $guia_madre->paisTrans = 512;
-    $guia_madre->guiasHija = array($guia_hija);
+    $guia_madre->guiasHija = array($guia_hija_obj);
     
+    $guia_madre_obj = new guiaMadreObj($guia_madre);
+            
     $terews = new terews();
-    $terews->guiasMadre= array($guia_madre);
+    $terews->guiasMadre= array($guia_madre_obj);
+    
+    $terews_obj = new terewsObj($terews);
     
     $guia = new guia();
-    $guia->terews = array($terews);
+    $guia->terews = array($terews_obj);
     
-    $results = $client->agregarGuia($guia, $autentication_obj);
-
-    echo "<pre>";
-    print_r($client->__getLastRequest());
-    die;
+    $guia_obj = new guiaObj($guia);
     
-    if (is_soap_fault($results)) {
-        exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");
+    $guia_soap_obj = new SoapVar($guia_obj, SOAP_ENC_OBJECT);
+    
+    $result = $client->__soapCall('agregarGuia', array($guia_soap_obj, $autentication_obj));
+        
+    if (is_soap_fault($result)) {
+        exit("error: " . $result->faultcode . "\n" . $result->faultstring . "\n");
     } else {
         echo "<pre>";
-        print_r($results);
+        print_r($result);
         die;
     }
 }
@@ -332,7 +372,7 @@ function consultarListaGuias() {
     $params = new SoapVar($consultar_guia, SOAP_ENC_OBJECT);
 
     $client->consultarListaGuias($params);
-    $results = $client->__getLastRequestHeaders();
+//    $results = $client->__getLastRequestHeaders();
 
     if (is_soap_fault($results)) {
         exit("error: " . $results->faultcode . "\n" . $results->faultstring . "\n");

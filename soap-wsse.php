@@ -4,6 +4,7 @@ require('xmlseclibs.php');
 class WSSESoap {
     const WSSENS = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
     const WSUNS = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd';
+    const WSDS = 'http://www.w3.org/2000/09/xmldsig#';
     const WSSEPFX = 'wsse';
     const WSUPFX = 'wsu';
     const XMLNS = 'xmlns';
@@ -33,6 +34,9 @@ class WSSESoap {
             }
             if (! $secnode) {
                 $secnode = $this->soapDoc->createElementNS(WSSESoap::WSSENS, WSSESoap::WSSEPFX.':Security');
+                $secnode->setAttribute(WSSESoap::XMLNS.":ds",  WSSESoap::WSDS);
+                $secnode->setAttribute(WSSESoap::XMLNS.":wsse",  WSSESoap::WSSENS);
+                $secnode->setAttribute(WSSESoap::XMLNS.":wsu",  WSSESoap::WSUNS);
                 $header->appendChild($secnode);
                 if ($bMustUnderstand) {
                     $secnode->setAttributeNS($this->soapNS, $this->soapPFX.':mustUnderstand', '1');
@@ -146,10 +150,12 @@ class WSSESoap {
             }
             
             $tokenRef = $this->soapDoc->createElementNS(WSSESoap::WSSENS, WSSESoap::WSSEPFX.':SecurityTokenReference');
+            $tokenRef->setAttribute('ValueType', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3'); //fixing 
             $keyInfo->appendChild($tokenRef);
             $reference = $this->soapDoc->createElementNS(WSSESoap::WSSENS, WSSESoap::WSSEPFX.':Reference');
             $reference->setAttribute("URI", $tokenURI);
             $tokenRef->appendChild($reference);
+            
         } else {
             throw new Exception('Unable to locate digital signature');
         }
